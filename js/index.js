@@ -1,4 +1,4 @@
-function start() {
+unction start() {
 
     var pos, $id = function (d) { return document.getElementById(d); };
 
@@ -13,14 +13,94 @@ function start() {
         }
     );
 
-
+    
     PhiloGL('glcanvas',
         {
+            events: {
+                onDragStart: function(e) {
+                  cameraControl.onDragStart(e);
+                },
+                onDragMove: function(e) {
+                  cameraControl.onDragMove(e);
+                }
+              },
+              onLoad: function(app) {
+              var camera = app.camera;
+              camera.fov = 37;
+              camera.update();
+              cameraControl = new CameraControl(app.camera);
+              },
+
             camera: {
                 position: {
-                    x: 0, y: 0, z: -10
+                    x: 0, y: 0, z: -13
                 }
             },
+              events: {
+                onTouchStart: function(e) {
+                  e.stop();
+                  this.pos = {
+                    x: e.x,
+                    y: e.y
+                  };
+                  this.dragging = true;
+                },
+                onTouchCancel: function() {
+                  this.dragging = false;
+                },
+                onTouchEnd: function() {
+                  this.dragging = false;
+                  theta = this.scene.models[0].rotation.y;
+                },
+                onTouchMove: function(e) {
+                  e.stop();
+                  var z = this.camera.position.z,
+                      sign = Math.abs(z) / z,
+                      pos = this.pos;
+        
+                  this.scene.models.forEach(function(m) {
+                    m.rotation.y += -(pos.x - e.x) / 100;
+                    m.update();
+                  });
+        
+                  pos.x = e.x;
+                  pos.y = e.y;
+                },
+                onDragStart: function(e) {
+                  this.pos = {
+                    x: e.x,
+                    y: e.y
+                  };
+                  this.dragging = true;
+                },
+                onDragCancel: function() {
+                  this.dragging = false;
+                },
+                onDragEnd: function() {
+                  this.dragging = false;
+                  theta = this.scene.models[0].rotation.y;
+                },
+                onDragMove: function(e) {
+                  var z = this.camera.position.z,
+                      sign = Math.abs(z) / z,
+                      pos = this.pos;
+        
+                  this.scene.models.forEach(function(m) {
+                    m.rotation.y += -(pos.x - e.x) / 100;
+                    m.update();
+                  });
+        
+                  pos.x = e.x;
+                  pos.y = e.y;
+                },
+                onMouseWheel: function(e) {
+                  e.stop();
+                  var camera = this.camera;
+                  camera.position.z += e.wheel;
+                  camera.update();
+                }
+              },
+
 
             /*textures: {
 
@@ -60,6 +140,24 @@ function start() {
                 tierra.update();
                 scene.add(tierra);
                 draw();
+
+                function draw() {
+
+                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPHT_BUFFER_BIT);
+
+
+                    scene.render();
+
+                    PhiloGL.Fx.requestAnimationFrame(draw);
+                }
+
+
+            }
+
+
+        });
+        
+}
 
                 function draw() {
 
