@@ -1,4 +1,4 @@
-unction start() {
+function start() {
 
     var pos, $id = function (d) { return document.getElementById(d); };
 
@@ -13,93 +13,116 @@ unction start() {
         }
     );
 
-    
+
     PhiloGL('glcanvas',
         {
             events: {
-                onDragStart: function(e) {
-                  cameraControl.onDragStart(e);
+                onDragStart: function (e) {
+                    cameraControl.onDragStart(e);
                 },
-                onDragMove: function(e) {
-                  cameraControl.onDragMove(e);
+                onDragMove: function (e) {
+                    cameraControl.onDragMove(e);
+                },
+                onKeyDown: function (e) {
+                    objectControl.onKeyDown(e);
                 }
-              },
-              onLoad: function(app) {
-              var camera = app.camera;
-              camera.fov = 37;
-              camera.update();
-              cameraControl = new CameraControl(app.camera);
-              },
+            },
+            onLoad: function (app) {
+                var camera = app.camera;
+                camera.fov = 37;
+                camera.update();
+                cameraControl = new CameraControl(app.camera);
+            },
 
             camera: {
                 position: {
                     x: 0, y: 0, z: -13
                 }
             },
-              events: {
-                onTouchStart: function(e) {
-                  e.stop();
-                  this.pos = {
-                    x: e.x,
-                    y: e.y
-                  };
-                  this.dragging = true;
+
+            events: {
+                onKeyDown: function (e) {
+                    switch (e.key) {
+                        case 'up':
+                            tierra.position.y += 2;
+                            break;
+                        case 'down':
+                            tierra.position.y -= 2;
+                            break;
+                        case 'left':
+                            tierra.position.x += 2;
+                            break;
+                        case 'right':
+                            tierra.position.x -= 2;
+                            break;
+                    }
+                    tierra.update();
                 },
-                onTouchCancel: function() {
-                  this.dragging = false;
+
+                onTouchStart: function (e) {
+                    e.stop();
+                    this.pos = {
+                        x: e.x,
+                        y: e.y
+                    };
+                    this.dragging = true;
                 },
-                onTouchEnd: function() {
-                  this.dragging = false;
-                  theta = this.scene.models[0].rotation.y;
+                onTouchCancel: function () {
+                    this.dragging = false;
                 },
-                onTouchMove: function(e) {
-                  e.stop();
-                  var z = this.camera.position.z,
-                      sign = Math.abs(z) / z,
-                      pos = this.pos;
-        
-                  this.scene.models.forEach(function(m) {
-                    m.rotation.y += -(pos.x - e.x) / 100;
-                    m.update();
-                  });
-        
-                  pos.x = e.x;
-                  pos.y = e.y;
+                onTouchEnd: function () {
+                    this.dragging = false;
+                    theta = this.scene.models[0].rotation.y;
                 },
-                onDragStart: function(e) {
-                  this.pos = {
-                    x: e.x,
-                    y: e.y
-                  };
-                  this.dragging = true;
+                onTouchMove: function (e) {
+                    e.stop();
+                    var z = this.camera.position.z,
+                        sign = Math.abs(z) / z,
+                        pos = this.pos;
+
+                    this.scene.models.forEach(function (m) {
+                        m.rotation.y += -(pos.x - e.x) / 100;
+                        m.update();
+                    });
+
+                    pos.x = e.x;
+                    pos.y = e.y;
                 },
-                onDragCancel: function() {
-                  this.dragging = false;
+                onDragStart: function (e) {
+                    this.pos = {
+                        x: e.x,
+                        y: e.y
+                    };
+                    this.dragging = true;
                 },
-                onDragEnd: function() {
-                  this.dragging = false;
-                  theta = this.scene.models[0].rotation.y;
+                onDragCancel: function () {
+                    this.dragging = false;
                 },
-                onDragMove: function(e) {
-                  var z = this.camera.position.z,
-                      sign = Math.abs(z) / z,
-                      pos = this.pos;
-        
-                  this.scene.models.forEach(function(m) {
-                    m.rotation.y += -(pos.x - e.x) / 100;
-                    m.update();
-                  });
-        
-                  pos.x = e.x;
-                  pos.y = e.y;
+                onDragEnd: function () {
+                    this.dragging = false;
+                    theta = this.scene.models[0].rotation.y;
                 },
-                onMouseWheel: function(e) {
-                  e.stop();
-                  var camera = this.camera;
-                  camera.position.z += e.wheel;
-                  camera.update();
+                onDragMove: function (e) {
+                    var z = this.camera.position.z,
+                        sign = Math.abs(z) / z,
+                        pos = this.pos;
+
+                    this.scene.models.forEach(function (m) {
+                        m.rotation.y += -(pos.x - e.x) / 100;
+                        m.update();
+                    });
+
+                    pos.x = e.x;
+                    pos.y = e.y;
+                },
+                onMouseWheel: function (e) {
+                    e.stop();
+                    var camera = this.camera;
+                    camera.position.z += e.wheel;
+                    camera.update();
                 }
-              },
+
+            },
 
 
             /*textures: {
@@ -156,22 +179,5 @@ unction start() {
 
 
         });
-        
-}
 
-                function draw() {
-
-                    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPHT_BUFFER_BIT);
-
-
-                    scene.render();
-
-                    PhiloGL.Fx.requestAnimationFrame(draw);
-                }
-
-
-            }
-
-
-        });
 }
