@@ -44,16 +44,16 @@ function start() {
                 onKeyDown: function (e) {
                     switch (e.key) {
                         case 'up':
-                            tierra.position.y += 0.5;
+                            tierra.position.y += 2;
                             break;
                         case 'down':
-                            tierra.position.y -= 0.5;
+                            tierra.position.y -= 2;
                             break;
                         case 'left':
-                            tierra.position.x += 0.5;
+                            tierra.position.x += 2;
                             break;
                         case 'right':
-                            tierra.position.x -= 0.5;
+                            tierra.position.x -= 2;
                             break;
                     }
                     tierra.update();
